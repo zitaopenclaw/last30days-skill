@@ -22,6 +22,7 @@ from typing import Any
 from . import (
     amazon,
     arxiv,
+    bilibili,
     bird_x,
     bluesky,
     brightdata,
@@ -41,6 +42,7 @@ from . import (
     http,
     instagram,
     jobs,
+    juejin,
     linkedin,
     library,
     library_index,
@@ -72,6 +74,7 @@ from . import (
     trustpilot,
     x_api,
     x_envelope,
+    v2ex,
     x_judge,
     xai_x,
     xiaohongshu_api,
@@ -103,6 +106,7 @@ SEARCH_ALIAS = {
     "xhs": "xiaohongshu",
     "meta": "meta_ads",
     "meta-ads": "meta_ads",
+    "b站": "bilibili",
     "xquik": "x",  # xquik is a backend of the single "x" source, not its own source
 }
 
@@ -258,6 +262,9 @@ MOCK_AVAILABLE_SOURCES = [
     "corpus",
     "dripstack",
     "telegram",
+    "bilibili",
+    "v2ex",
+    "juejin",
 ]
 
 
@@ -326,6 +333,7 @@ def available_sources(
     if which("yt-dlp") or env.is_youtube_sc_available(config):
         available.append("youtube")
     available.extend(["hackernews", "polymarket"])
+    available.extend(["bilibili", "v2ex", "juejin"])
     # StockTwits is gated to ticker/crypto topics only (flag set in run()).
     if config.get("_financial_topic"):
         available.append("stocktwits")
@@ -5169,6 +5177,30 @@ def _retrieve_stream_impl(
             hackernews.parse_hackernews_response(result, query=subquery.search_query),
             _result_outcome_artifact(source, result),
         )
+    if source == "bilibili":
+        result = bilibili.search_bilibili(
+            subquery.search_query, from_date, to_date, depth=depth,
+        )
+        return (
+            bilibili.parse_bilibili_response(result, query=subquery.search_query),
+            _result_outcome_artifact(source, result),
+        )
+    if source == "v2ex":
+        result = v2ex.search_v2ex(
+            subquery.search_query, from_date, to_date, depth=depth,
+        )
+        return (
+            v2ex.parse_v2ex_response(result, query=subquery.search_query),
+            _result_outcome_artifact(source, result),
+        )
+    if source == "juejin":
+        result = juejin.search_juejin(
+            subquery.search_query, from_date, to_date, depth=depth,
+        )
+        return (
+            juejin.parse_juejin_response(result, query=subquery.search_query),
+            _result_outcome_artifact(source, result),
+        )
     if source == "stocktwits":
         # Pass raw_topic so symbol detection sees the full topic, not the
         # narrowed per-subquery search_query (same rationale as reddit).
@@ -5419,6 +5451,39 @@ def _mock_stream_results(source: str, subquery: schema.SubQuery) -> tuple[list[d
                 "why_relevant": "Brave web search",
             }
         ],
+        "bilibili": [{
+            "id": "BV1MOCK",
+            "title": f"{subquery.search_query} 视频",
+            "url": f"https://www.bilibili.com/video/BV1MOCK-{slug}",
+            "author": "mock-uploader",
+            "date": dates.get_date_range(3)[0],
+            "engagement": {"views": 12000, "likes": 800, "comments": 120},
+            "snippet": f"Mock Bilibili video about {subquery.search_query}.",
+            "relevance": 0.84,
+            "why_relevant": "Mock Bilibili result",
+        }],
+        "v2ex": [{
+            "id": "V2MOCK",
+            "title": f"{subquery.search_query} 社区讨论",
+            "url": f"https://www.v2ex.com/t/123456-{slug}",
+            "author": "mock-member",
+            "date": dates.get_date_range(4)[0],
+            "engagement": {"replies": 24},
+            "snippet": f"Mock V2EX discussion about {subquery.search_query}.",
+            "relevance": 0.82,
+            "why_relevant": "Mock V2EX result",
+        }],
+        "juejin": [{
+            "id": "JUEJINMOCK",
+            "title": f"{subquery.search_query} 实践指南",
+            "url": f"https://juejin.cn/post/123456-{slug}",
+            "author": "mock-author",
+            "date": dates.get_date_range(6)[0],
+            "engagement": {"likes": 600, "comments": 42, "views": 9000, "collects": 180},
+            "snippet": f"Mock Juejin article about {subquery.search_query}.",
+            "relevance": 0.83,
+            "why_relevant": "Mock Juejin result",
+        }],
         "digg": [
             {
                 "id": "mock1abc",

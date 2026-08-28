@@ -154,6 +154,9 @@ SOURCE_CAPABILITIES = {
     "meta_ads": {"reference", "company_signal", "product_signal"},
     "xiaohongshu": {"video", "video_shortform", "social"},
     "telegram": {"discussion", "social"},
+    "bilibili": {"video", "video_longform", "discussion"},
+    "v2ex": {"discussion", "social"},
+    "juejin": {"reference", "analysis", "link"},
     "github": {"discussion", "link"},
     "grounding": {"web", "reference", "link"},
     "perplexity": {"web", "reference", "analysis"},
@@ -460,6 +463,8 @@ Rules:
 - DO NOT quote the user's full topic verbatim in search_query. Quote only multi-word proper nouns like "Hermes Agent", "Claude Code", "Nous Research". Bare keywords OR'd together retrieve more than exact-phrase searches.
 - search_query should match how content is TITLED on platforms
 - GitHub (Issues/PRs) is best for engineering, developer tools, and open source topics: 'kanye west bully' not 'kanye west album news March 2026'
+- For a topic with no CJK characters, when Available sources includes bilibili, v2ex, or juejin, emit 1-2 additional Chinese-language subqueries translated for Chinese community usage. Those subqueries' sources MUST be limited to the available Chinese sources (bilibili, v2ex, juejin), and must not replace the primary-language subqueries.
+- For a topic containing CJK characters, add `site:zhihu.com` to at least one grounding/web search_query when grounding is available.
 """.strip()
 
 
