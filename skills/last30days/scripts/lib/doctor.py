@@ -176,6 +176,9 @@ SOURCE_ORDER = (
     "linkedin",
     "pinterest",
     "xiaohongshu",
+    "bilibili",
+    "v2ex",
+    "juejin",
     "jobs",
     "library",
 )
@@ -647,6 +650,18 @@ def _hackernews_record(config):
     return _record(status=health.OK, requires="none (free Algolia API)")
 
 
+def _bilibili_record(config):
+    return _record(status=health.OK, requires="none (public Bilibili API)")
+
+
+def _v2ex_record(config):
+    return _record(status=health.OK, requires="none (public sov2ex API)")
+
+
+def _juejin_record(config):
+    return _record(status=health.OK, requires="none (public Juejin API)")
+
+
 def _polymarket_record(config):
     return _record(status=health.OK, requires="none (public API)")
 
@@ -952,6 +967,9 @@ _SOURCE_BUILDERS: Dict[str, Callable[[Dict[str, Any]], Dict[str, Any]]] = {
     "youtube": _youtube_record,
     "web": _web_record,
     "hackernews": _hackernews_record,
+    "bilibili": _bilibili_record,
+    "v2ex": _v2ex_record,
+    "juejin": _juejin_record,
     "polymarket": _polymarket_record,
     "github": _github_record,
     "digg": _digg_record,

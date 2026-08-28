@@ -132,7 +132,7 @@ class TestEnvConstantParity:
     def test_pipeline_source_has_no_raw_reddit_env_literals(self):
         # The declared constants live in env.py; pipeline.py must not restate
         # the raw LAST30DAYS_REDDIT_* strings (comments included — they drift too).
-        source = Path(pipeline.__file__).read_text()
+        source = Path(pipeline.__file__).read_text(encoding="utf-8")
         assert "LAST30DAYS_REDDIT_" not in source
 
     def test_backend_pin_constant_flips_gating_to_sc_primary(self):

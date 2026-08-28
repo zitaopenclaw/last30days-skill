@@ -47,6 +47,9 @@ def normalize_source_items(
             s, i, idx, fd, td, "IG", "Instagram reel"
         ),
         "hackernews": _normalize_hackernews,
+        "bilibili": _normalize_grounding,
+        "v2ex": _normalize_grounding,
+        "juejin": _normalize_juejin,
         "stocktwits": _normalize_stocktwits,
         "dripstack": _normalize_dripstack,
         "bluesky": lambda s, i, idx, fd, td: _normalize_microblog(
@@ -942,6 +945,24 @@ def _normalize_grounding(
         snippet=snippet,
         metadata=item.get("metadata") or {},
     )
+
+
+def _normalize_juejin(
+    source: str,
+    item: dict[str, Any],
+    index: int,
+    from_date: str,
+    to_date: str,
+) -> schema.SourceItem:
+    engagement = item.get("engagement") or {}
+    normalized_item = dict(item)
+    normalized_item["engagement"] = {
+        "likes": engagement.get("likes", engagement.get("digg_count", 0)),
+        "comments": engagement.get("comments", engagement.get("comment_count", 0)),
+        "views": engagement.get("views", engagement.get("view_count", 0)),
+        "collects": engagement.get("collects", engagement.get("collect_count", 0)),
+    }
+    return _normalize_grounding(source, normalized_item, index, from_date, to_date)
 
 
 def _normalize_linkedin(

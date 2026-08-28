@@ -48,6 +48,7 @@ KNOWN_SOURCE_NAMES = {
     "truthsocial", "polymarket", "grounding", "xiaohongshu", "github",
     "perplexity", "threads", "pinterest", "digg", "jobs", "linkedin",
     "arxiv", "techmeme", "stocktwits", "trustpilot", "dripstack",
+    "bilibili", "v2ex", "juejin",
 }
 
 # ---------------------------------------------------------------------------

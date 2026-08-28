@@ -289,6 +289,24 @@ REGISTRY: Dict[Tuple[str, str], Prescription] = dict((
         fix_cli="XIAOHONGSHU_API_BASE=http://your-host:18060  # only for a custom host; leave unset to auto-probe localhost and host.docker.internal",
         anchor="api-keys-env",
     ),
+    _entry(
+        "bilibili", "request_failed",
+        cause="Bilibili public search API returned an error",
+        fix_nl="retry the search later; the source requires no credentials",
+        fix_cli="retry the same last30days query",
+    ),
+    _entry(
+        "v2ex", "request_failed",
+        cause="The sov2ex public search API returned an error",
+        fix_nl="retry the search later; the source requires no credentials",
+        fix_cli="retry the same last30days query",
+    ),
+    _entry(
+        "juejin", "request_failed",
+        cause="The Juejin public search API returned an error",
+        fix_nl="retry the search later; the source requires no credentials",
+        fix_cli="retry the same last30days query",
+    ),
 ))
 
 
